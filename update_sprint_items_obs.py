@@ -6,6 +6,8 @@ import markdown
 import datetime
 from jira import JIRA
 
+# commit test
+
 def getCreds (auth_file):
 	with open(auth_file,'r') as af:
 		gotCreds = json.loads(af.read())
