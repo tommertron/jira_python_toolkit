@@ -14,6 +14,7 @@ This script replies on a json file called "credentials.json" existing in the sam
    "project": "PROJECT KEY",
    "instance": "INSTANCE DOMAIN"
    "destinationFile": "FILE WHERE SPRINT ITEMS GO"
+   "statuses": ["Status1", "Status2"]
 }
 ```
-
+Note that the statuses should match all of the statuses of the project that you are querying. The output will be based on the order that they are entered in the json above.
