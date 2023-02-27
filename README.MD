@@ -19,7 +19,7 @@ As you can see, there are more than just 'credentials' here. Right now, there is
 
 Note that the "instance" key requires only the domain names, ommitting https:// etc. (e.g. "instance.atlassian.net").
 
-For details on getting your key and keyOwner details, check out Atlassian's [documentation][1].
+For details on getting your key and keyOwner details, check out Atlassian's [documentation](1)
 
 ## update_sprint_items_obs.py
 
