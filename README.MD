@@ -19,7 +19,7 @@ As you can see, there are more than just 'credentials' here. Right now, there is
 
 Note that the "instance" key requires only the domain names, ommitting https:// etc. (e.g. "instance.atlassian.net").
 
-For details on getting your key and keyOwner details, check out Atlassian's [documentation](1)
+For details on getting your key and keyOwner details, check out Atlassian's [documentation][1].
 
 ## update_sprint_items_obs.py
 
@@ -29,4 +29,4 @@ Note that the statuses should match all of the statuses of the project that you 
 
 You'll also need to update the "destinationFile" key with the full path to the file you want to update. My recommendation is to give this file an .md extension as that's the format used, but it will render just fine as a txt file as well. 
 
-[1]((https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)
+[1]: https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/
