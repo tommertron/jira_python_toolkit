@@ -46,13 +46,8 @@ response = requests.request(
 )
 
 # Convert data to workable data in the script 
-#qdata = (json.dumps(json.loads(response.text), sort_keys=True, rindent=4, separators=(",", ": ")))
 jdata = json.loads(response.text)
 
-issueList = 'key,issuetype,Final Estimate,Initial Estimate,Current Estimate,status'
-
-
-json_data = jdata
 def generate_issue_list (data, output_file):
 
 	headers = creds["statuses"]
