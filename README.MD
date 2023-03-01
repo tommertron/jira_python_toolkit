@@ -1,6 +1,6 @@
 # Introduction
 
-This is a collection (for, a collection of one) utilities to interact with Jira using Python. Each utility comes in the form of one script.
+This is a collection (for now, a collection of one) utilities to interact with Jira using Python. Each utility comes in the form of one script.
 
 All scripts here will rely on a single file called 'credentials.json' in the following format:
 
