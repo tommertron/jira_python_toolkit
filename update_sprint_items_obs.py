@@ -70,7 +70,7 @@ def generate_issue_list (data, output_file):
 					# format each issue
 					key = issue['key']
 					summary = issue['fields']['summary']
-					url = f"{instance}/{key}"
+					url = f"https://{instance}/{key}"
 					f.write(f"- [{summary}]({url})\n")
 				f.write("\n")
 
