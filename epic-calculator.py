@@ -72,8 +72,15 @@ for epic in epics:
 	total_issues = total_getter(f'parent = {epic}')
 	# Get issues that are done
 	done_issues = total_getter(f'parent = {epic} AND status = Done')
+	# Get issues that are stuck
+	stuck_issues = total_getter(f'parent = {epic} AND status = Stuck')
 	# Get Project Name
 	project_name = project_name_getter()
 	percent_done = done_issues / total_issues * 100
 	print (f'## [{project_name}](https://{instance}/browse/{epic})')
-	print (f'*{done_issues}* issues done of *{total_issues}* total issues. (**{percent_done:.0f}% complete**)\n')
+	print (f'*{done_issues}* issues done of *{total_issues}* total issues. (**{percent_done:.0f}% complete**)')
+	if stuck_issues == 0:
+		print ('\n')
+	else:
+		print (f'{stuck_issues} issues **stuck**\n')
+# End
