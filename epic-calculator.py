@@ -83,4 +83,3 @@ for epic in epics:
 		print ('\n')
 	else:
 		print (f'{stuck_issues} issues **stuck**\n')
-# End
