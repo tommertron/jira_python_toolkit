@@ -82,4 +82,4 @@ for epic in epics:
 	if stuck_issues == 0:
 		print ('\n')
 	else:
-		print (f'{stuck_issues} issues **stuck**\n')
+		print (f'**{stuck_issues} issues stuck**\n')
