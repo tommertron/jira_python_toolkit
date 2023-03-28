@@ -5,8 +5,7 @@ import json
 import markdown
 import datetime
 from jira import JIRA
-
-# commit test
+import sys
 
 def getCreds (auth_file):
 	with open(auth_file,'r') as af:
@@ -23,8 +22,13 @@ instance = creds["instance"]
 keyOwner = creds["keyOwner"]
 destinationFile = creds["destinationFile"]
 
-# Define Project Key
-project = "FBIC"
+args = sys.argv
+
+# Define Local variables
+if len(args) < 2:
+	project = "ICS"
+else:
+	project = args[1]
 spoints = 'customfield_10061' #name of the field in your jira instance that holds story points
 sprint = 'customfield_10010'
 
