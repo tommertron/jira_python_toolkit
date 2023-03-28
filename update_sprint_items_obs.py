@@ -6,8 +6,6 @@ import markdown
 import datetime
 from jira import JIRA
 
-# commit test
-
 def getCreds (auth_file):
 	with open(auth_file,'r') as af:
 		gotCreds = json.loads(af.read())
@@ -35,7 +33,7 @@ query = {
 	'jql': f'project = {project} AND Sprint in openSprints() and assignee = "{assignee}" ORDER BY Rank ASC',
 	'fields': 'issuetype,summary,status, estimate',
 	'maxResults': 100,
-	"startAt": 0 #Remember to do this a few times to get all the data!
+	"startAt": 0
 }
 response = requests.request(
    "GET",
@@ -48,7 +46,8 @@ response = requests.request(
 # Convert data to workable data in the script 
 jdata = json.loads(response.text)
 
-def generate_issue_list (data, output_file):
+# Function to go through the issues and generate the list of issues for the assignee
+def generate_issue_list (data):
 
 	headers = creds["statuses"]
 	statuses = {}
@@ -60,19 +59,16 @@ def generate_issue_list (data, output_file):
 			if issue['fields']['status']['name'] == header:
 				statuses[header].append(issue)
 
-	with open(output_file, 'w') as f:
-		# write header for each status list
-		for header in headers:
-			issues = statuses[header]
-			if issues:
-				f.write(f"## {header}\n")
-				for issue in issues:
-					# format each issue
-					key = issue['key']
-					summary = issue['fields']['summary']
-					url = f"https://{instance}/browse/{key}"
-					f.write(f"- [{summary}]({url})\n")
-				f.write("\n")
+	for header in headers:
+		issues = statuses[header]
+		if issues:
+			print(f"## {header}\n")
+			for issue in issues:
+				# format each issue
+				key = issue['key']
+				summary = issue['fields']['summary']
+				url = f"https://{instance}/browse/{key}"
+				print(f"- [{summary}]({url})")
 
 
-generate_issue_list(jdata, destinationFile)
+generate_issue_list(jdata)
