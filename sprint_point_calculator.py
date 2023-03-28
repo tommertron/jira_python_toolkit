@@ -17,18 +17,20 @@ def getCreds (auth_file):
 creds = getCreds("credentials.json")
 
 key = creds["key"]
-assignee = creds["assignee"]
 instance = creds["instance"]
 keyOwner = creds["keyOwner"]
-destinationFile = creds["destinationFile"]
+ignored = creds["ignore"]
 
+# Get arguments passed to script. The main argument is the project key.
 args = sys.argv
 
-# Define Local variables
+# Get the project key from args or assign a default if it wasn't passed in
 if len(args) < 2:
 	project = "ICS"
 else:
 	project = args[1]
+	
+## Define where to find some custom fields so we can reference them more easily in the script
 spoints = 'customfield_10061' #name of the field in your jira instance that holds story points
 sprint = 'customfield_10010'
 
@@ -56,12 +58,10 @@ def get_issues(startAt):
 	)
 	return response
 
-# Convert data to workable data in the script
+# Iterate through all the issues and add to the list. (Jira can only return 100 issues per query.)
 startAt = 0
 stop = False
 issues = []
-
-# Iterate through all the issues and add to the list. (Jira can only return 100 issues per query.)
 while stop == False:
 	results = get_issues(startAt)
 	jdata = json.loads(results.text)
@@ -73,7 +73,7 @@ while stop == False:
 		stop = True
 
 ## Make the average points by person function 
-def calculate_average_points_per_person(issues):
+def calculate_average_points_per_person(issues, ignored):
     points_by_person = {}
     unique_sprints_by_person = {}
 
@@ -85,6 +85,11 @@ def calculate_average_points_per_person(issues):
             continue
 
         display_name = assignee['displayName']
+
+        # Skip if display_name is in the ignored list
+        if display_name in ignored:
+            continue
+
         story_points = issue['fields']['customfield_10061']
 
         if story_points is None:
@@ -107,8 +112,13 @@ def calculate_average_points_per_person(issues):
 
     return average_points_by_person
 
+average_points_by_person = calculate_average_points_per_person(issues, ignored)
 
-average_points_by_person = calculate_average_points_per_person(issues)
+# Sort names alphabetically
+sorted_names = sorted(average_points_by_person.keys())
 
-for name, avg_points in average_points_by_person.items():
-    print(f"{name}, {avg_points:.2f} pts")
+for name in sorted_names:
+    avg_points = average_points_by_person[name]
+    # Round average points to the nearest integer
+    rounded_avg_points = round(avg_points)
+    print(f"{name}, {rounded_avg_points} pts")
