@@ -6,20 +6,15 @@ import markdown
 import datetime
 from jira import JIRA
 import sys
-
-def getCreds (auth_file):
-	with open(auth_file,'r') as af:
-		gotCreds = json.loads(af.read())
-		return gotCreds
+from toolkit_tools import issue_getter
+from toolkit_tools import getSettings
 
 
-# Define variables from credentials file
-creds = getCreds("credentials.json")
-
-key = creds["key"]
-instance = creds["instance"]
-keyOwner = creds["keyOwner"]
-ignored = creds["ignore"]
+# Define variables from universal settings file
+settings = getSettings()
+ignored = settings['ignored_people']
+points = settings['points']
+sprint = settings['sprint']
 
 # Get arguments passed to script. The main argument is the project key.
 args = sys.argv
@@ -29,48 +24,11 @@ if len(args) < 2:
 	project = "ICS"
 else:
 	project = args[1]
-	
-## Define where to find some custom fields so we can reference them more easily in the script
-spoints = 'customfield_10061' #name of the field in your jira instance that holds story points
-sprint = 'customfield_10010'
 
-# Jira Query Function
-def get_issues(startAt):
-	url = f"https://{instance}/rest/api/3/search"
-	auth = HTTPBasicAuth(keyOwner, key)
-	headers = {
-	   "Accept": "application/json",
-	   "Content-Type": "application/json"
-	}
-
-	query = {
-		'jql': f'project = {project} AND Sprint in closedSprints() AND status = "Done" ORDER BY resolutiondate',
- 		'fields': f'issuetype,summary,status, {spoints}, {sprint}, assignee',
-		'maxResults': 100,
-		"startAt": startAt
-	}
-	response = requests.request(
-	   "GET",
-	   url,
-	   headers=headers,
-	   params=query,
-	   auth=auth
-	)
-	return response
-
-# Iterate through all the issues and add to the list. (Jira can only return 100 issues per query.)
-startAt = 0
-stop = False
-issues = []
-while stop == False:
-	results = get_issues(startAt)
-	jdata = json.loads(results.text)
-	total = jdata['total']
-	issues = issues + jdata['issues']
-	if total - startAt > 100:
-		startAt += 100
-	else:
-		stop = True
+# Define query and get issues
+jql = f'project = {project} AND Sprint in closedSprints() AND status = "Done" ORDER BY resolutiondate',
+fields = f'issuetype,summary,status, {points}, {sprint}, assignee',
+issues = issue_getter(jql,fields)
 
 ## Make the average points by person function 
 def calculate_average_points_per_person(issues, ignored):
@@ -78,7 +36,7 @@ def calculate_average_points_per_person(issues, ignored):
     unique_sprints_by_person = {}
 
     for issue in issues:
-        sprints = issue['fields']['customfield_10010']
+        sprints = issue['fields'][sprint]
         assignee = issue['fields']['assignee']
 
         if not assignee:
@@ -90,7 +48,7 @@ def calculate_average_points_per_person(issues, ignored):
         if display_name in ignored:
             continue
 
-        story_points = issue['fields']['customfield_10061']
+        story_points = issue['fields'][points]
 
         if story_points is None:
             continue
