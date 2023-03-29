@@ -1,6 +1,6 @@
 # Introduction
 
-This is a collection (for now, a collection of one) utilities to interact with Jira using Python. Each utility comes in the form of one script.
+This is a collection of utilities to interact with Jira using Python. Each utility comes in the form of one script.
 
 Most scripts here will default to returning or printing out some basic statistics in plain text Markdown format.
 
