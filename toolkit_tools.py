@@ -13,7 +13,7 @@ key = creds["key"]
 instance = creds["instance"]
 keyOwner = creds["keyOwner"]
 
-def getSettings ():
+def getSettings():
 	with open('settings.json','r') as af:
 		settings = json.loads(af.read())
 		return settings
